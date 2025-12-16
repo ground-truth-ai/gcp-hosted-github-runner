@@ -33,7 +33,7 @@ resource "google_compute_instance_template" "runner_instance" {
   disk {
     auto_delete  = true
     boot         = false
-    disk_type    = "SCRATCH"
+    disk_type    = "local-ssd"
     interface    = "SCSI"
     disk_size_gb = 375
   }
