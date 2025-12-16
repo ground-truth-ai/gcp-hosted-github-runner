@@ -27,7 +27,15 @@ resource "google_compute_instance_template" "runner_instance" {
     boot         = true
     source_image = var.machine_image
     disk_type    = var.disk_type
-    disk_size_gb = var.disk_size_gb
+    disk_size_gb = 10
+  }
+
+  disk {
+    auto_delete  = true
+    boot         = false
+    disk_type    = "SCRATCH"
+    interface    = "NVME"
+    disk_size_gb = 80
   }
 
   service_account {
@@ -83,7 +91,12 @@ resource "google_compute_project_metadata_item" "startup_scripts_register_jit_ru
 agent_name=$(hostname)
 echo "Setup of agent '$agent_name' started"
 apt-get update && curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh && bash add-google-cloud-ops-agent-repo.sh --also-install && apt-get -y install docker.io docker-buildx curl sed jq ${local.github_runner_package_install}
-useradd -d /home/agent -u ${var.github_runner_uid} agent
+# Configure docker to use the local SSD
+mkdir -p /mnt/disks/google-local-ssd-0/docker
+echo '{"data-root": "/mnt/disks/google-local-ssd-0/docker"}' > /etc/docker/daemon.json
+systemctl restart docker
+mkdir -p /mnt/disks/google-local-ssd-0/agent
+useradd -d /mnt/disks/google-local-ssd-0/agent -u ${var.github_runner_uid} agent
 usermod -aG docker agent
 newgrp docker
 RUNNER_DOWNLOAD_URL='${var.github_runner_download_url}'
@@ -93,9 +106,8 @@ if [ -z "$${RUNNER_DOWNLOAD_URL}" ]; then
   RUNNER_DOWNLOAD_URL="https://github.com/actions/runner/releases/download/v$${RUNNER_VERSION}/actions-runner-linux-x64-$${RUNNER_VERSION}.tar.gz"
 fi
 curl -s -o /tmp/agent.tar.gz -L $${RUNNER_DOWNLOAD_URL}
-mkdir -p /home/agent
-chown -R agent:agent /home/agent
-pushd /home/agent
+chown -R agent:agent /mnt/disks/google-local-ssd-0/agent
+pushd /mnt/disks/google-local-ssd-0/agent
 sudo -u agent tar zxf /tmp/agent.tar.gz
 encoded_jit_config=$1
 echo -n $encoded_jit_config | base64 -d | jq '.".runner"' -r | base64 -d > .runner
