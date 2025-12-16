@@ -17,6 +17,18 @@ resource "google_service_account" "github_runner_sa" {
   display_name = "GitHub runner sa"
 }
 
+resource "google_project_iam_member" "github_runner_logging" {
+  project = local.projectId
+  member  = "serviceAccount:${google_service_account.github_runner_sa.email}"
+  role    = "roles/logging.logWriter"
+}
+
+resource "google_project_iam_member" "github_runner_monitoring" {
+  project = local.projectId
+  member  = "serviceAccount:${google_service_account.github_runner_sa.email}"
+  role    = "roles/monitoring.metricWriter"
+}
+
 // ---- autoscaler-sa ----
 resource "google_service_account" "autoscaler_sa" {
   account_id   = "autoscaler-sa"
