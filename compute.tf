@@ -27,7 +27,7 @@ resource "google_compute_instance_template" "runner_instance" {
     boot         = true
     source_image = var.machine_image
     disk_type    = var.disk_type
-    disk_size_gb = 10
+    disk_size_gb = 40
   }
 
   disk {
