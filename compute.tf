@@ -91,6 +91,10 @@ resource "google_compute_project_metadata_item" "startup_scripts_register_jit_ru
 #!/bin/bash
 agent_name=$(hostname)
 echo "Setup of agent '$agent_name' started"
+# Map /tmp to the local SSD
+mkdir -p /mnt/disks/google-local-ssd-0/tmp
+chmod 1777 /mnt/disks/google-local-ssd-0/tmp
+mount --bind /mnt/disks/google-local-ssd-0/tmp /tmp
 apt-get update && curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh && bash add-google-cloud-ops-agent-repo.sh --also-install && apt-get -y install docker.io docker-buildx curl sed jq ${local.github_runner_package_install}
 # Configure docker to use the local SSD
 mkdir -p /mnt/disks/google-local-ssd-0/docker
@@ -118,8 +122,9 @@ sed -i 's/{{SvcNameVar}}/actions.runner.service/g' bin/systemd.svc.sh.template
 sed -i 's/{{SvcDescription}}/GitHub Actions Runner/g' bin/systemd.svc.sh.template
 cp bin/systemd.svc.sh.template ./svc.sh && chmod +x ./svc.sh
 ./bin/installdependencies.sh || shutdown now
-./svc.sh install agent || shutdown now
-./svc.sh start || shutdown now
+mkdir -p /mnt/disks/google-local-ssd-0/agent/tmp
+env RUNNER_TEMP=/mnt/disks/google-local-ssd-0/agent/tmp ./svc.sh install agent || shutdown now
+env RUNNER_TEMP=/mnt/disks/google-local-ssd-0/agent/tmp ./svc.sh start || shutdown now
 popd
 rm /tmp/agent.tar.gz
 echo "Setup finished - waiting for Workflow Job"
