@@ -34,8 +34,8 @@ resource "google_compute_instance_template" "runner_instance" {
     auto_delete  = true
     boot         = false
     disk_type    = "SCRATCH"
-    interface    = "NVME"
-    disk_size_gb = 80
+    interface    = "SCSI"
+    disk_size_gb = 375
   }
 
   service_account {
