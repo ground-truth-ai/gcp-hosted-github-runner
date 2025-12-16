@@ -22,7 +22,7 @@ provider "google" {
 }
 
 module "github-runner" {
-  source                    = "github.com/Privatehive/gcp-hosted-github-runner"
+  source                    = "github.com/ground-truth-ai/gcp-hosted-github-runner"
   machine_type              = "c2d-highcpu-8" // The default machine type of the VM instance.
   github_runner_group_id    = 1 // The GitHub Organization/Enterprise runner group ID. Has no effect for GitHub Repositories.
 
