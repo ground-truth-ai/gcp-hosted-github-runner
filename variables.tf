@@ -135,7 +135,7 @@ variable "github_runner_uid" {
 variable "github_runner_packages" {
   type        = list(string)
   description = "Additional packages that will be installed in the runner with apt."
-  default     = []
+  default     = ["unzip"]
 }
 
 variable "force_cloud_run_deployment" {
