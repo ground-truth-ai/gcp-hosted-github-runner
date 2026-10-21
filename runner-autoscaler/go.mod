@@ -1,12 +1,13 @@
 module github.com/Tereius/gcp-hosted-github-runner
 
-go 1.21
+go 1.25.0
 
 require (
 	cloud.google.com/go/cloudtasks v1.12.11
 	cloud.google.com/go/compute v1.27.3
 	cloud.google.com/go/secretmanager v1.13.5
 	github.com/gin-gonic/gin v1.10.0
+	github.com/googleapis/gax-go/v2 v2.13.0
 	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.9.0
 	github.com/toorop/gin-logrus v0.0.0-20210225092905-2c785434f26f
@@ -36,7 +37,6 @@ require (
 	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
 	github.com/googleapis/enterprise-certificate-proxy v0.3.2 // indirect
-	github.com/googleapis/gax-go/v2 v2.13.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.8 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
@@ -54,12 +54,12 @@ require (
 	go.opentelemetry.io/otel/metric v1.28.0 // indirect
 	go.opentelemetry.io/otel/trace v1.28.0 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/crypto v0.25.0 // indirect
-	golang.org/x/net v0.27.0 // indirect
+	golang.org/x/crypto v0.52.0 // indirect
+	golang.org/x/net v0.54.0 // indirect
 	golang.org/x/oauth2 v0.21.0 // indirect
-	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.22.0 // indirect
-	golang.org/x/text v0.16.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sys v0.45.0 // indirect
+	golang.org/x/text v0.37.0 // indirect
 	golang.org/x/time v0.5.0 // indirect
 	google.golang.org/api v0.189.0 // indirect
 	google.golang.org/genproto v0.0.0-20240722135656-d784300faade // indirect
